@@ -22,31 +22,39 @@ exports.createOrder = async (req, res) => {
     let totalAmount = 0;
     const orderItems = [];
 
-    //Stock validation
+    // 1. Validate stock per size variant
     for (const item of validItems) {
-      if (item.product.stock < item.quantity) {
+      const sizeVariant = item.product.sizes.find(
+        (s) => s.size.toLowerCase() === item.size.toLowerCase()
+      );
+
+      if (!sizeVariant || sizeVariant.stock < item.quantity) {
         return res.status(400).json({
           success: false,
-          message: `Insufficient stock for ${item.product.title}`,
+          message: `Insufficient stock for ${item.product.name} (Size: ${item.size})`,
         });
       }
 
       totalAmount += item.product.price * item.quantity;
       orderItems.push({
         product: item.product._id,
-        title: item.product.title,
+        name: item.product.name,
+        size: item.size,
         price: item.product.price,
+        image: item.product.images[0] || '',
         quantity: item.quantity,
       });
     }
 
-    //Decrement stock
+    // 2. Decrement variant stock atomically using positional $
     for (const item of validItems) {
-      await Product.findByIdAndUpdate(item.product._id, {
-        $inc: { stock: -item.quantity },
-      });
+      await Product.updateOne(
+        { _id: item.product._id, 'sizes.size': item.size },
+        { $inc: { 'sizes.$.stock': -item.quantity } }
+      );
     }
 
+    // 3. Persist order
     const order = await Order.create({
       user: req.user._id,
       items: orderItems,
@@ -54,7 +62,7 @@ exports.createOrder = async (req, res) => {
       totalAmount,
     });
 
-    //Clear cart
+    // 4. Reset Cart
     cart.items = [];
     await cart.save();
 
