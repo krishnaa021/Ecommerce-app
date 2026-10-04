@@ -14,19 +14,23 @@ exports.createOrder = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Your cart is empty' });
     }
 
+    const validItems = cart.items.filter((item) => item.product !== null);
+    if (validItems.length === 0) {
+      return res.status(400).json({ success: false, message: 'No valid products in cart' });
+    }
+
     let totalAmount = 0;
     const orderItems = [];
 
-    //  validate inventory
-    for (const item of cart.items) {
+    //Stock validation
+    for (const item of validItems) {
       if (item.product.stock < item.quantity) {
         return res.status(400).json({
           success: false,
           message: `Insufficient stock for ${item.product.title}`,
         });
       }
-      
-    // claculate total
+
       totalAmount += item.product.price * item.quantity;
       orderItems.push({
         product: item.product._id,
@@ -36,14 +40,13 @@ exports.createOrder = async (req, res) => {
       });
     }
 
-    // Decrement stock
-    for (const item of cart.items) {
+    //Decrement stock
+    for (const item of validItems) {
       await Product.findByIdAndUpdate(item.product._id, {
         $inc: { stock: -item.quantity },
       });
     }
 
-    // Create Order
     const order = await Order.create({
       user: req.user._id,
       items: orderItems,
@@ -51,7 +54,7 @@ exports.createOrder = async (req, res) => {
       totalAmount,
     });
 
-    // Clear cart
+    //Clear cart
     cart.items = [];
     await cart.save();
 
