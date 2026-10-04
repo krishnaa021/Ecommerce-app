@@ -1,4 +1,3 @@
-// src/api/axios.js
 import axios from 'axios'
 
 const api = axios.create({
@@ -10,5 +9,19 @@ api.interceptors.request.use((config) => {
   if (token) config.headers.Authorization = `Bearer ${token}`
   return config
 })
+
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const url = error.config?.url ?? ''
+    const isAuthForm = url.includes('/auth/login') || url.includes('/auth/register')
+
+    if (error.response?.status === 401 && !isAuthForm && localStorage.getItem('token')) {
+      localStorage.removeItem('token')
+      window.dispatchEvent(new Event('auth:logout'))
+    }
+    return Promise.reject(error)
+  }
+)
 
 export default api

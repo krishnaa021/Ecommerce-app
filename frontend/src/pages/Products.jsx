@@ -77,10 +77,9 @@ export default function Products() {
           onChange={(e) => updateParam('sort', e.target.value)}
           className="rounded border border-gray-300 bg-white px-3 py-2 text-sm"
         >
-          <option value="">Sort by: Recommended</option>
-          <option value="price_asc">Price: Low to High</option>
-          <option value="price_desc">Price: High to Low</option>
-          <option value="newest">Newest first</option>
+          <option value="">Sort by: Newest</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
         </select>
       </div>
 
