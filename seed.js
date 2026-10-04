@@ -14,7 +14,7 @@ const products = [
     originalPrice: 1299,
     images: [
       "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab",
-      "https://images.unsplash.com/photo-1503341504253-dff將"
+      "https://images.unsplash.com/photo-1503341504253-dff4815485f1"
     ],
     sizes: [
       { size: "S", stock: 12 },
@@ -188,12 +188,13 @@ const seedDB = async () => {
     console.log('Connected to MongoDB successfully.');
 
     console.log('Clearing existing products...');
-    await Product.deleteMany({});
+    const deleted = await Product.deleteMany({});
+    console.log(`Deleted ${deleted.deletedCount} old products.`);
 
     console.log('Inserting seed products...');
-    await Product.insertMany(sampleProducts);
+    await Product.insertMany(products); 
 
-    console.log('Database successfully seeded with products!');
+    console.log(`Successfully seeded ${products.length} fashion products!`);
     process.exit(0);
   } catch (error) {
     console.error('Seeding failed:', error.message);
