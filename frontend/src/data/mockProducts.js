@@ -4,6 +4,7 @@ const Product = require('./models/Product');
 
 const products = [
   {
+    id: 1,
     name: "Classic Oversized Cotton T-Shirt",
     brand: "Urban Thread",
     description:
@@ -13,8 +14,8 @@ const products = [
     price: 799,
     originalPrice: 1299,
     images: [
-      "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab",
-      "https://images.unsplash.com/photo-1503341504253-dff將"
+        "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab",
+        "https://images.unsplash.com/photo-149 shirt"
     ],
     sizes: [
       { size: "S", stock: 12 },
@@ -28,6 +29,7 @@ const products = [
     tags: ['trending']
   },
   {
+    id: 2,
     name: "Slim Fit Stretch Denim Jeans",
     brand: "Denim District",
     description:
@@ -53,6 +55,7 @@ const products = [
     tags: ['trending']
   },
   {
+    id: 3,
     name: "Floral Wrap Midi Dress",
     brand: "Belle Avenue",
     description:
@@ -78,6 +81,7 @@ const products = [
     tags: ['trending']
   },
   {
+    id: 4,
     name: "High-Waisted Wide-Leg Trousers",
     brand: "Mode Studio",
     description:
@@ -103,6 +107,7 @@ const products = [
     tags: ['trending']
   },
   {
+    id: 5,
     name: "Kids Printed Casual Hoodie",
     brand: "Happy Sprouts",
     description:
@@ -127,6 +132,7 @@ const products = [
     tags: ['trending']
   },
   {
+    id: 6,
     name: "Minimal Canvas Sneakers",
     brand: "Step Culture",
     description:
@@ -152,6 +158,7 @@ const products = [
     tags: ['trending']
   },
   {
+    id: 7,
     name: "Ribbed Knit Cardigan",
     brand: "Cozy Lane",
     description:
