@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import StatusBadge from '../components/common/StatusBadge'
-import { fetchMyOrders } from '../api/orderAPI'
+import { fetchMyOrders } from '../api/orderApi'
 import getErrorMessage from '../utils/getErrorMessage'
 
 const rupee = (n) => `₹${n.toLocaleString('en-IN')}`

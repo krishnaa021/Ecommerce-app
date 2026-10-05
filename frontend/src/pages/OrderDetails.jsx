@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useLocation, useParams } from 'react-router-dom'
 import { CheckCircle } from 'lucide-react'
 import StatusBadge from '../components/common/StatusBadge'
-import { fetchOrderById } from '../api/orderAPI'
+import { fetchOrderById } from '../api/orderApi'
 import getErrorMessage from '../utils/getErrorMessage'
 
 const rupee = (n) => `₹${n.toLocaleString('en-IN')}`

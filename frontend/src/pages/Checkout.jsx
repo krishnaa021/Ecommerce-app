@@ -2,7 +2,7 @@ import { useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Input from '../components/common/Input'
 import { useCart } from '../context/CartContext'
-import { placeOrder } from '../api/orderAPI'
+import { placeOrder } from '../api/orderApi'
 import getErrorMessage from '../utils/getErrorMessage'
 
 const rupee = (n) => `₹${n.toLocaleString('en-IN')}`
