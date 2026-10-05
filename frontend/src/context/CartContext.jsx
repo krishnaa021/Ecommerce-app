@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { useAuth } from './AuthContext'
-import { addCartItem, fetchCart, removeCartItem, updateCartItem } from '../api/cartApi'
+import { addCartItem, fetchCart, removeCartItem, updateCartItem } from '../api/cartAPI'
 
 const CartContext = createContext(null)
 const EMPTY = []
