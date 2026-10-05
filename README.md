@@ -23,19 +23,4 @@ A RESTful backend API for a fashion e-commerce platform built with Node.js, Expr
 
 ---
 
-## Project Structure
 
-```text
-Ecommerce-app/
-├── backend/
-│   ├── config/          # Database connection
-│   ├── controllers/     # Route logic (auth, product, cart, order)
-│   ├── models/          # Mongoose models (User, Product, Cart, Order)
-│   ├── routes/          # Express route definitions
-│   ├── middleware/      # Auth & error handling middleware
-│   ├── seed.js          # Database seeding script
-│   ├── .env             # Environment variables (ignored by Git)
-│   ├── .env.example     # Template for environment variables
-│   └── server.js        # App entry point
-├── package.json
-└── README.md
