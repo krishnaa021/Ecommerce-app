@@ -33,7 +33,12 @@ export default function Products() {
       })
       .catch((err) => {
         if (ignore) return
-        setError(err.response?.data?.message || 'Could not load products. Please try again.')
+        const status = err.response?.status
+        setError(
+          status && status < 500
+            ? err.response.data?.message
+            : 'Something went wrong on our side. Please try again in a moment.'
+        )
       })
       .finally(() => {
         if (!ignore) setLoading(false)
