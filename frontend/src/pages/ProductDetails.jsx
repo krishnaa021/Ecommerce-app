@@ -1,10 +1,19 @@
+import { useAuth } from '../context/AuthContext'
+import { useCart } from '../context/CartContext'
+import getErrorMessage from '../utils/getErrorMessage'
 import { useEffect, useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate, useLocation } from 'react-router-dom'
 import { Heart, ShoppingBag, Star } from 'lucide-react'
 import { fetchProductById } from '../api/productAPI'
 
 export default function ProductDetails() {
   const { id } = useParams()
+  const navigate = useNavigate()
+  const location = useLocation()
+  const { user } = useAuth()
+  const { addToCart } = useCart()
+  const [adding, setAdding] = useState(false)
+  const [messageIsError, setMessageIsError] = useState(false)
   const [product, setProduct] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -78,13 +87,28 @@ export default function ProductDetails() {
   const selected = sizes.find((s) => s.size === selectedSize)
   const allOut = sizes.length > 0 && sizes.every((s) => s.stock === 0)
 
-  const handleAddToBag = () => {
+  const handleAddToBag = async () => {
     if (!selectedSize) {
       setSizeError(true)
       return
     }
+    if (!user) {
+      navigate('/login', { state: { from: location } })
+      return
+    }
 
-    setMessage(`Size ${selectedSize} selected. Cart integration comes next.`)
+    setAdding(true)
+    setMessage('')
+    try {
+      await addToCart({ productId: id, size: selectedSize, quantity: 1 })
+      setMessageIsError(false)
+      setMessage('Added to your bag.')
+    } catch (err) {
+      setMessageIsError(true)
+      setMessage(getErrorMessage(err))
+    } finally {
+      setAdding(false)
+    }
   }
 
   return (
@@ -191,12 +215,12 @@ export default function ProductDetails() {
           <div className="mt-6 flex gap-3">
             <button
               type="button"
-              disabled={allOut}
+              disabled={allOut || adding}
               onClick={handleAddToBag}
               className="flex flex-1 items-center justify-center gap-2 rounded-md bg-brand py-3 font-bold uppercase text-white hover:bg-brand-dark disabled:cursor-not-allowed disabled:bg-gray-300"
             >
               <ShoppingBag size={20} />
-              {allOut ? 'Out of stock' : 'Add to bag'}
+              {allOut ? 'Out of stock' : adding ? 'Adding...' : 'Add to bag'}
             </button>
             <button
               type="button"
@@ -206,7 +230,16 @@ export default function ProductDetails() {
               Wishlist
             </button>
           </div>
-          {message && <p className="mt-3 text-sm text-gray-600">{message}</p>}
+          {message && (
+            <p className={`mt-3 text-sm ${messageIsError ? 'text-red-600' : 'text-green-700'}`}>
+              {message}{' '}
+              {!messageIsError && (
+                <Link to="/cart" className="font-semibold underline">
+                  Go to bag
+                </Link>
+              )}
+            </p>
+          )}
 
           {/* Details */}
           <hr className="my-6 border-gray-200" />

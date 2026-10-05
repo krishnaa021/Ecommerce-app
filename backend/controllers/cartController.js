@@ -5,7 +5,7 @@ exports.getCart = async (req, res) => {
   try {
     let cart = await Cart.findOne({ user: req.user._id }).populate(
       'items.product',
-      'name brand price images sizes'
+      'name brand price originalPrice images sizes'
     );
 
     if (!cart) {
@@ -73,7 +73,7 @@ exports.addToCart = async (req, res) => {
     await cart.save();
     const updatedCart = await Cart.findById(cart._id).populate(
       'items.product',
-      'name brand price images sizes'
+      'name brand price originalPrice images sizes'
     );
 
     res.status(200).json({ success: true, data: updatedCart });
@@ -122,7 +122,7 @@ exports.updateCartQuantity = async (req, res) => {
     await cart.save();
     const updatedCart = await Cart.findById(cart._id).populate(
       'items.product',
-      'name brand price images sizes'
+      'name brand price originalPrice images sizes'
     );
 
     res.status(200).json({ success: true, data: updatedCart });
@@ -152,7 +152,7 @@ exports.removeFromCart = async (req, res) => {
     await cart.save();
     const updatedCart = await Cart.findById(cart._id).populate(
       'items.product',
-      'name brand price images sizes'
+      'name brand price originalPrice images sizes'
     );
 
     res.status(200).json({ success: true, data: updatedCart });
