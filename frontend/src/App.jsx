@@ -10,6 +10,7 @@ import Orders from './pages/Orders'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import OrderDetails from './pages/OrderDetails'
+import NotFound from './pages/NotFound'
 
 export default function App() {
   return (
@@ -20,6 +21,7 @@ export default function App() {
         <Route path="/products/:id" element={<ProductDetails />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="*" element={<NotFound />} />
 
         <Route element={<ProtectedRoute />}>
           <Route path="/cart" element={<Cart />} />

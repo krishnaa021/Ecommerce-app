@@ -11,6 +11,11 @@ const formatDate = (iso) =>
 
 export default function OrderDetails() {
   const { id } = useParams()
+ 
+  return <OrderDetailsContent key={id} id={id} />
+}
+
+function OrderDetailsContent({ id }) {
   const location = useLocation()
   const justPlaced = location.state?.justPlaced
 
@@ -20,8 +25,6 @@ export default function OrderDetails() {
 
   useEffect(() => {
     let ignore = false
-    setLoading(true)
-    setError('')
 
     fetchOrderById(id)
       .then((data) => {

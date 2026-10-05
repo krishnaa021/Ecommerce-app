@@ -1,19 +1,23 @@
-import { useAuth } from '../context/AuthContext'
-import { useCart } from '../context/CartContext'
-import getErrorMessage from '../utils/getErrorMessage'
 import { useEffect, useState } from 'react'
 import { useParams, Link, useNavigate, useLocation } from 'react-router-dom'
 import { Heart, ShoppingBag, Star } from 'lucide-react'
-import { fetchProductById } from '../api/productAPI'
+import { fetchProductById } from '../api/productApi'
+import { useAuth } from '../context/AuthContext'
+import { useCart } from '../context/CartContext'
+import getErrorMessage from '../utils/getErrorMessage'
 
 export default function ProductDetails() {
   const { id } = useParams()
+
+  return <ProductDetailsContent key={id} id={id} />
+}
+
+function ProductDetailsContent({ id }) {
   const navigate = useNavigate()
   const location = useLocation()
   const { user } = useAuth()
   const { addToCart } = useCart()
-  const [adding, setAdding] = useState(false)
-  const [messageIsError, setMessageIsError] = useState(false)
+
   const [product, setProduct] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -21,16 +25,11 @@ export default function ProductDetails() {
   const [selectedSize, setSelectedSize] = useState('')
   const [sizeError, setSizeError] = useState(false)
   const [message, setMessage] = useState('')
+  const [messageIsError, setMessageIsError] = useState(false)
+  const [adding, setAdding] = useState(false)
 
   useEffect(() => {
     let ignore = false
-    setLoading(true)
-    setError('')
-    setProduct(null)
-    setActiveImage(0)
-    setSelectedSize('')
-    setSizeError(false)
-    setMessage('')
 
     fetchProductById(id)
       .then((p) => {
@@ -93,6 +92,7 @@ export default function ProductDetails() {
       return
     }
     if (!user) {
+      // Send the user to login, then back to this product
       navigate('/login', { state: { from: location } })
       return
     }
@@ -113,7 +113,7 @@ export default function ProductDetails() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-6">
-
+      {/* Breadcrumb */}
       <nav className="mb-4 text-sm text-gray-500">
         <Link to="/" className="hover:text-brand">Home</Link>
         <span className="mx-1">/</span>
@@ -230,6 +230,7 @@ export default function ProductDetails() {
               Wishlist
             </button>
           </div>
+
           {message && (
             <p className={`mt-3 text-sm ${messageIsError ? 'text-red-600' : 'text-green-700'}`}>
               {message}{' '}

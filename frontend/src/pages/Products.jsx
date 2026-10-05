@@ -18,9 +18,7 @@ const PAGE_SIZE = 12
 
 export default function Products() {
   const [searchParams, setSearchParams] = useSearchParams()
-  const [allProducts, setAllProducts] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
+  const [result, setResult] = useState({ key: null, products: [], error: '' })
   const [filtersOpen, setFiltersOpen] = useState(false)
 
   const category = searchParams.get('category') ?? ''
@@ -32,32 +30,36 @@ export default function Products() {
   const price = searchParams.get('price') ?? ''
   const rating = Number(searchParams.get('rating')) || 0
 
+  const requestKey = `${category}|${search}`
+
   useEffect(() => {
     let ignore = false
-    setLoading(true)
-    setError('')
 
     fetchProducts({ category, search, limit: FETCH_LIMIT })
       .then((res) => {
-        if (!ignore) setAllProducts(res.data)
+        if (!ignore) setResult({ key: requestKey, products: res.data, error: '' })
       })
       .catch((err) => {
         if (ignore) return
         const status = err.response?.status
-        setError(
-          status && status < 500
-            ? err.response.data?.message
-            : 'Something went wrong on our side. Please try again in a moment.'
-        )
-      })
-      .finally(() => {
-        if (!ignore) setLoading(false)
+        setResult({
+          key: requestKey,
+          products: [],
+          error:
+            status && status < 500
+              ? err.response.data?.message
+              : 'Something went wrong on our side. Please try again in a moment.',
+        })
       })
 
     return () => {
       ignore = true
     }
-  }, [category, search])
+  }, [category, search, requestKey])
+
+  const loading = result.key !== requestKey
+  const error = loading ? '' : result.error
+  const allProducts = loading ? [] : result.products
 
   const selected = {
     subCategories: subCategories.map((s) => s.toLowerCase()),

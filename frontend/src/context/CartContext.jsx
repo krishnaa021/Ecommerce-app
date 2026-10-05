@@ -1,8 +1,9 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { useAuth } from './AuthContext'
-import { addCartItem, fetchCart, removeCartItem, updateCartItem } from '../api/cartAPI'
+import { addCartItem, fetchCart, removeCartItem, updateCartItem } from '../api/cartApi'
 
 const CartContext = createContext(null)
+const EMPTY = []
 
 const findStock = (item) =>
   item.product.sizes?.find((s) => s.size.toLowerCase() === item.size.toLowerCase())?.stock ?? 0
@@ -10,50 +11,57 @@ const findStock = (item) =>
 export function CartProvider({ children }) {
   const { user } = useAuth()
   const userId = user?._id
-  const [rawItems, setRawItems] = useState([])
-  const [loading, setLoading] = useState(false)
+
+  const [cart, setCart] = useState({ userId: null, items: EMPTY })
 
   useEffect(() => {
-    if (!userId) {
-      setRawItems([])
-      return
-    }
+    if (!userId) return
     let ignore = false
-    setLoading(true)
+
     fetchCart()
-      .then((cart) => {
-        if (!ignore) setRawItems(cart.items ?? [])
+      .then((data) => {
+        if (!ignore) setCart({ userId, items: data.items ?? [] })
       })
-      .catch(() => {})
-      .finally(() => {
-        if (!ignore) setLoading(false)
+      .catch(() => {
+        if (!ignore) setCart((prev) => (prev.userId === userId ? prev : { userId, items: EMPTY }))
       })
+
     return () => {
       ignore = true
     }
   }, [userId])
 
-  const addToCart = useCallback(async (item) => {
-    const cart = await addCartItem(item)
-    setRawItems(cart.items ?? [])
-  }, [])
+  const rawItems = cart.userId === userId ? cart.items : EMPTY
+  const loading = Boolean(userId) && cart.userId !== userId
 
-  const updateQuantity = useCallback(async (productId, size, quantity) => {
-    const cart = await updateCartItem(productId, size, quantity)
-    setRawItems(cart.items ?? [])
-  }, [])
+  const addToCart = useCallback(
+    async (item) => {
+      const data = await addCartItem(item)
+      setCart({ userId, items: data.items ?? [] })
+    },
+    [userId]
+  )
 
-  const removeItem = useCallback(async (productId, size) => {
-    const cart = await removeCartItem(productId, size)
-    setRawItems(cart.items ?? [])
-  }, [])
+  const updateQuantity = useCallback(
+    async (productId, size, quantity) => {
+      const data = await updateCartItem(productId, size, quantity)
+      setCart({ userId, items: data.items ?? [] })
+    },
+    [userId]
+  )
 
-  const clearLocalCart = useCallback(() => setRawItems([]), [])
+  const removeItem = useCallback(
+    async (productId, size) => {
+      const data = await removeCartItem(productId, size)
+      setCart({ userId, items: data.items ?? [] })
+    },
+    [userId]
+  )
+
+  const clearLocalCart = useCallback(() => setCart({ userId, items: EMPTY }), [userId])
 
   const value = useMemo(() => {
-    const items = rawItems
-      .filter((i) => i.product)
-      .map((i) => ({ ...i, stock: findStock(i) }))
+    const items = rawItems.filter((i) => i.product).map((i) => ({ ...i, stock: findStock(i) }))
 
     const itemCount = items.reduce((n, i) => n + i.quantity, 0)
     const subtotal = items.reduce((sum, i) => sum + i.product.price * i.quantity, 0)
