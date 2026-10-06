@@ -16,7 +16,7 @@ const accountLinks = [
   { label: 'Bag', to: '/cart' },
 ]
 
-const helpLinks = ['FAQ', 'Shipping & Delivery', 'Returns & Exchanges', 'Contact Us']
+const helpLinks = []
 
 export default function Footer() {
   return (
@@ -77,7 +77,7 @@ export default function Footer() {
               <Mail size={16} /> support@shopease.com
             </p>
             <p className="flex items-center gap-2">
-              <Phone size={16} /> +91 98765 43210
+              <Phone size={16} /> +91 98xxx xxx10
             </p>
             <p className="flex items-center gap-2">
               <MapPin size={16} /> Delhi, India
