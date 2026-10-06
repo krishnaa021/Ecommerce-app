@@ -7,9 +7,11 @@ import ProductDetails from './pages/ProductDetails'
 import Cart from './pages/Cart'
 import Checkout from './pages/Checkout'
 import Orders from './pages/Orders'
+import OrderDetails from './pages/OrderDetails'
+import Profile from './pages/Profile'
+import Wishlist from './pages/Wishlist'
 import Login from './pages/Login'
 import Register from './pages/Register'
-import OrderDetails from './pages/OrderDetails'
 import NotFound from './pages/NotFound'
 
 export default function App() {
@@ -21,14 +23,17 @@ export default function App() {
         <Route path="/products/:id" element={<ProductDetails />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="*" element={<NotFound />} />
 
         <Route element={<ProtectedRoute />}>
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/orders" element={<Orders />} />
           <Route path="/orders/:id" element={<OrderDetails />} />
         </Route>
+
+        <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
   )

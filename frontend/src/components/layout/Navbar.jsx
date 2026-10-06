@@ -27,6 +27,12 @@ export default function Navbar() {
     setMenuOpen(false)
   }
 
+  const handleLogout = () => {
+    logout()
+    setMenuOpen(false)
+    navigate('/')
+  }
+
   return (
     <header className="sticky top-0 z-50 border-b border-gray-200 bg-white shadow-sm">
       <div className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-4">
@@ -77,7 +83,7 @@ export default function Navbar() {
           {/* Profile */}
           <div className="group relative hidden sm:block">
             <Link
-              to={user ? '/orders' : '/login'}
+              to={user ? '/profile' : '/login'}
               className="flex flex-col items-center text-gray-700 hover:text-brand"
             >
               <User size={20} />
@@ -87,15 +93,21 @@ export default function Navbar() {
             </Link>
 
             {user && (
-              <div className="invisible absolute right-0 top-full z-50 w-44 rounded-md border border-gray-200 bg-white py-2 opacity-0 shadow-lg transition group-hover:visible group-hover:opacity-100">
+              <div className="invisible absolute right-0 top-full z-50 w-48 rounded-md border border-gray-200 bg-white py-2 opacity-0 shadow-lg transition group-hover:visible group-hover:opacity-100">
                 <p className="truncate px-4 pb-2 text-xs text-gray-500">Hello, {user.name}</p>
+                <Link to="/profile" className="block px-4 py-2 text-sm hover:bg-gray-50">
+                  My Profile
+                </Link>
                 <Link to="/orders" className="block px-4 py-2 text-sm hover:bg-gray-50">
                   My Orders
                 </Link>
+                <Link to="/wishlist" className="block px-4 py-2 text-sm hover:bg-gray-50">
+                  Wishlist
+                </Link>
                 <button
                   type="button"
-                  onClick={logout}
-                  className="block w-full px-4 py-2 text-left text-sm hover:bg-gray-50"
+                  onClick={handleLogout}
+                  className="block w-full border-t border-gray-100 px-4 py-2 text-left text-sm hover:bg-gray-50"
                 >
                   Logout
                 </button>
@@ -146,22 +158,19 @@ export default function Navbar() {
           {user ? (
             <>
               <Link
+                to="/profile"
+                onClick={() => setMenuOpen(false)}
+                className="block py-2 text-sm font-semibold text-gray-700 hover:text-brand"
+              >
+                My Profile
+              </Link>
+              <Link
                 to="/orders"
                 onClick={() => setMenuOpen(false)}
                 className="block py-2 text-sm font-semibold text-gray-700 hover:text-brand"
               >
                 My Orders
               </Link>
-              <button
-                type="button"
-                onClick={() => {
-                  logout()
-                  setMenuOpen(false)
-                }}
-                className="block w-full py-2 text-left text-sm font-semibold text-gray-700 hover:text-brand"
-              >
-                Logout
-              </button>
             </>
           ) : (
             <Link
@@ -180,6 +189,16 @@ export default function Navbar() {
           >
             Wishlist
           </Link>
+
+          {user && (
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="block w-full py-2 text-left text-sm font-semibold text-gray-700 hover:text-brand"
+            >
+              Logout
+            </button>
+          )}
         </nav>
       )}
     </header>
