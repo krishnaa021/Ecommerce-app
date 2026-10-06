@@ -9,7 +9,7 @@ import getErrorMessage from '../utils/getErrorMessage'
 export default function ProductDetails() {
   const { id } = useParams()
 
-  return <ProductDetailsCo  ntent key={id} id={id} />
+  return <ProductDetailsContent key={id} id={id} />
 }
 
 function ProductDetailsContent({ id }) {
