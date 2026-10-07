@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
-import { Heart, Star } from 'lucide-react'
+import { Star } from 'lucide-react'
+import WishlistButton from './WishlistButton'
 
 const formatCount = (n) => (n >= 1000 ? `${(n / 1000).toFixed(1)}k` : n)
 
@@ -32,17 +33,10 @@ export default function ProductCard({ product }) {
           </span>
         )}
 
-        <button
-          type="button"
-          aria-label="Add to wishlist"
-          onClick={(e) => e.preventDefault()}
-          className="absolute right-2 top-2 rounded-full bg-white/90 p-2 text-gray-600 shadow transition hover:text-brand md:opacity-0 md:group-hover:opacity-100"
-        >
-          <Heart size={18} />
-        </button>
+        <WishlistButton product={product} />
 
         {outOfStock && (
-          <div className="absolute inset-0 flex items-center justify-center bg-white/70">
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-white/70">
             <span className="rounded bg-gray-800 px-3 py-1 text-xs font-semibold uppercase text-white">
               Out of stock
             </span>
