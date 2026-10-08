@@ -1,4 +1,6 @@
 const User = require('../models/User.js');
+const Product = require('../models/Product.js');
+const mongoose = require('mongoose');
 
 exports.getWishlist = async (req, res) => {
   try {
@@ -15,7 +17,7 @@ exports.getWishlist = async (req, res) => {
 exports.toggleWishlist = async (req, res) => {
   const { productId } = req.body;
 
-  if(!product || !mongoose.isValidObjectId(productId)) {
+  if(!productId || !mongoose.isValidObjectId(productId)) {
     return res.status(400).json({ message: 'A valid product is required' });
   }
 
