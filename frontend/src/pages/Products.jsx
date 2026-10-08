@@ -14,7 +14,7 @@ import {
 } from '../utils/productFilters'
 
 const FETCH_LIMIT = 100 
-const PAGE_SIZE = 12 
+const PAGE_SIZE = 10 
 
 export default function Products() {
   const [searchParams, setSearchParams] = useSearchParams()
