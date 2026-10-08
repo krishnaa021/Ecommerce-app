@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react'
 import { useParams, Link, useNavigate, useLocation } from 'react-router-dom'
-import { Heart, ShoppingBag, Star } from 'lucide-react'
+import { ShoppingBag, Star } from 'lucide-react'
 import { fetchProductById } from '../api/productApi'
 import { useAuth } from '../context/AuthContext'
 import { useCart } from '../context/CartContext'
+import WishlistButton from '../components/products/WishlistButton'
 import getErrorMessage from '../utils/getErrorMessage'
 
 export default function ProductDetails() {
   const { id } = useParams()
-
   return <ProductDetailsContent key={id} id={id} />
 }
 
@@ -92,7 +92,6 @@ function ProductDetailsContent({ id }) {
       return
     }
     if (!user) {
-      // Send the user to login, then back to this product
       navigate('/login', { state: { from: location } })
       return
     }
@@ -222,13 +221,14 @@ function ProductDetailsContent({ id }) {
               <ShoppingBag size={20} />
               {allOut ? 'Out of stock' : adding ? 'Adding...' : 'Add to bag'}
             </button>
-            <button
-              type="button"
-              className="flex flex-1 items-center justify-center gap-2 rounded-md border border-gray-300 py-3 font-bold uppercase text-gray-800 hover:border-gray-800"
-            >
-              <Heart size={20} />
-              Wishlist
-            </button>
+            <WishlistButton
+              product={product}
+              variant="full"
+              onError={(msg) => {
+                setMessageIsError(true)
+                setMessage(msg)
+              }}
+            />
           </div>
 
           {message && (
