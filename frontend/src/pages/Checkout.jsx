@@ -51,7 +51,7 @@ export default function Checkout() {
       })
       orderPlaced.current = true
       clearLocalCart() // the backend already emptied the cart
-      navigate(`/orders/${order._id}`, { replace: true, state: { justPlaced: true } })
+      navigate(`/orders`, { replace: true, state: { justPlaced: true } })
     } catch (err) {
       setServerError(getErrorMessage(err))
       setSubmitting(false)
