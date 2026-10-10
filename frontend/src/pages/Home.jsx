@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import ProductGrid from '../components/products/ProductGrid'
 import { fetchProducts } from '../api/productApi'
+import CategoryTiles from '../components/home/CategoryTiles'
 
 const categoryTiles = [
   { label: 'Men', value: 'men', style: 'from-sky-100 to-blue-300' },
@@ -123,20 +124,7 @@ export default function Home() {
 
       {/* Categories */}
       <Section title="Shop by category">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-          {categoryTiles.map((c) => (
-            <Link
-              key={c.value}
-              to={`/products?category=${c.value}`}
-              className={`group flex h-40 items-end overflow-hidden rounded-lg bg-linear-to-br p-5 transition hover:shadow-lg sm:h-56 ${c.style}`}
-            >
-              <span className="text-2xl font-extrabold text-gray-900">{c.label}</span>
-              <span className="ml-auto text-sm font-semibold text-gray-800 transition group-hover:translate-x-1">
-                Shop now →
-              </span>
-            </Link>
-          ))}
-        </div>
+        <CategoryTiles products={products} />
       </Section>
 
       {/* Product rows */}
