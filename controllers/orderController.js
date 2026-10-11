@@ -1,7 +1,7 @@
 const Order = require('../models/Order');
 const Cart = require('../models/Cart');
 const Product = require('../models/Product');
-const { orderqueue } = require('../config/queue');
+const { orderQueue } = require('../config/queue');
 
 exports.createOrder = async (req, res) => {
   try {
