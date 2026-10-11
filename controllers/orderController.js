@@ -1,6 +1,7 @@
 const Order = require('../models/Order');
 const Cart = require('../models/Cart');
 const Product = require('../models/Product');
+const { orderqueue } = require('../config/queue');
 
 exports.createOrder = async (req, res) => {
   try {
@@ -65,6 +66,23 @@ exports.createOrder = async (req, res) => {
     // 4. Reset Cart
     cart.items = [];
     await cart.save();
+
+    await orderQueue.add(
+      'process-order-confirmation',
+      {
+        orderId: order._id,
+        customerEmail: req.user.email,
+        customerName: req.user.name,
+      },
+      {
+        attempts: 3,
+        backoff: {
+          type: 'exponential',
+          delay: 5000, // 5s, 10s, 20s retries
+        },
+        removeOnComplete: true, // Auto-cleans from Redis memory when done
+      }
+    );
 
     res.status(201).json({ success: true, data: order });
   } catch (error) {
