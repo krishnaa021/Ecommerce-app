@@ -65,6 +65,13 @@ exports.login = async (req, res) => {
       });
     }
 
+    if (!user.password) {
+      return res.status(401).json({
+        success: false,
+        message: 'This account was registered using Google. Please sign in with Google.',
+      });
+    }
+
     const isMatch = await user.matchPassword(password);
     if (!isMatch) {
       return res.status(401).json({
@@ -89,27 +96,46 @@ exports.login = async (req, res) => {
 };
 
 exports.googleLogin = async (req, res) => {
+  const { idToken } = req.body;
+
+  if (!idToken) {
+    return res.status(400).json({
+      success: false,
+      message: 'Google ID token is required',
+    });
+  }
+
+  let payload;
   try {
-    const { idToken } = req.body;
-
-    if(!idToken) {
-      return res.status(400).json({ succcess: false, message: 'Google ID token is required' });
-    }
-
     const ticket = await client.verifyIdToken({
       idToken,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
+    payload = ticket.getPayload();
+  } catch (err) {
+    return res.status(401).json({
+      success: false,
+      message: 'Invalid or expired Google token',
+      error: err.message,
+    });
+  }
 
-    const payload = ticket.getPayload();
-    const { sub: googleId, email, name, picture } = payload;
+  if (!payload.email_verified) {
+    return res.status(403).json({
+      success: false,
+      message: 'Google account email is not verified',
+    });
+  }
 
-    let user = await User.findOne({ email });
+  const { sub: googleId, email, name, picture } = payload;
+
+  try {
+    let user = await User.findOne({ email }).select('+password');
 
     if (user) {
-      if(!user.googleId) {
+      if (!user.googleId) {
         user.googleId = googleId;
-        if(!user.avatar) user.avatar = picture;
+        if (!user.avatar) user.avatar = picture;
         await user.save();
       }
     } else {
@@ -134,7 +160,11 @@ exports.googleLogin = async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(401).json({ success: false, message: 'Invalid google token', error: error.message });
+    res.status(500).json({
+      success: false,
+      message: 'Server error while processing user account',
+      error: error.message,
+    });
   }
 };
 
