@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Mail, Phone, MapPin } from 'lucide-react'
+import { ArrowUpRight, Mail, Phone, MapPin } from 'lucide-react'
 
 const shopLinks = [
   { label: 'Men', to: '/products?category=men' },
@@ -10,84 +10,98 @@ const shopLinks = [
 ]
 
 const accountLinks = [
-  { label: 'Login', to: '/login' },
-  { label: 'Register', to: '/register' },
   { label: 'My Orders', to: '/orders' },
+  { label: 'Wishlist', to: '/wishlist' },
   { label: 'Bag', to: '/cart' },
 ]
 
-const helpLinks = []
-
 export default function Footer() {
   return (
-    <footer className="mt-16 border-t border-gray-200 bg-gray-50">
-      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:grid-cols-2 lg:grid-cols-4">
-        {/* Brand */}
-        <div>
-          <Link to="/" className="text-2xl font-extrabold tracking-tight text-brand">
-            ShopEase
-          </Link>
-          <p className="mt-3 text-sm text-gray-600">
-            Your one-stop destination for fashion, home and beauty. Quality products,
-            delivered to your door.
-          </p>
-        </div>
-
-        {/* Shop */}
-        <div>
-          <h3 className="text-sm font-bold uppercase tracking-wide text-gray-800">Shop</h3>
-          <ul className="mt-4 space-y-2">
-            {shopLinks.map((l) => (
-              <li key={l.label}>
-                <Link to={l.to} className="text-sm text-gray-600 hover:text-brand">
-                  {l.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Account */}
-        <div>
-          <h3 className="text-sm font-bold uppercase tracking-wide text-gray-800">Account</h3>
-          <ul className="mt-4 space-y-2">
-            {accountLinks.map((l) => (
-              <li key={l.label}>
-                <Link to={l.to} className="text-sm text-gray-600 hover:text-brand">
-                  {l.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Help + contact */}
-        <div>
-          <h3 className="text-sm font-bold uppercase tracking-wide text-gray-800">Help</h3>
-          <ul className="mt-4 space-y-2">
-            {helpLinks.map((label) => (
-              <li key={label} className="text-sm text-gray-600">
-                {label}
-              </li>
-            ))}
-          </ul>
-
-          <div className="mt-5 space-y-2 text-sm text-gray-600">
-            <p className="flex items-center gap-2">
-              <Mail size={16} /> support@shopease.com
+    <footer className="mt-16 bg-gray-950 text-white">
+      <div className="mx-auto max-w-7xl px-4 pb-10 pt-12 sm:pt-16">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr_1.2fr] lg:gap-12">
+          <div>
+            <Link to="/" className="inline-flex items-center gap-2 text-2xl font-extrabold tracking-tight">
+              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand text-sm text-white">
+                S
+              </span>
+              <span>ShopEase</span>
+            </Link>
+            <p className="mt-5 max-w-xs text-sm leading-6 text-gray-400">
+              A little something for every day. Discover fashion, home and beauty picks you&apos;ll
+              love.
             </p>
-            <p className="flex items-center gap-2">
-              <Phone size={16} /> +91 98xxx xxx10
+            <Link
+              to="/products"
+              className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-white transition-colors hover:text-pink"
+            >
+              Explore the store <ArrowUpRight size={16} />
+            </Link>
+          </div>
+
+          <nav aria-label="Shop links">
+            <h3 className="text-xs font-bold uppercase tracking-[0.18em] text-gray-400">Shop</h3>
+            <ul className="mt-5 space-y-3">
+              {shopLinks.map((link) => (
+                <li key={link.label}>
+                  <Link
+                    to={link.to}
+                    className="text-sm text-gray-200 transition-colors hover:text-white"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <nav aria-label="Account links">
+            <h3 className="text-xs font-bold uppercase tracking-[0.18em] text-gray-400">Account</h3>
+            <ul className="mt-5 space-y-3">
+              {accountLinks.map((link) => (
+                <li key={link.label}>
+                  <Link
+                    to={link.to}
+                    className="text-sm text-gray-200 transition-colors hover:text-white"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <div>
+            <h3 className="text-xs font-bold uppercase tracking-[0.18em] text-gray-400">Get in touch</h3>
+            <p className="mt-5 text-sm leading-6 text-gray-400">
+              Need a hand? We&apos;re here to help with your shopping experience.
             </p>
-            <p className="flex items-center gap-2">
-              <MapPin size={16} /> Delhi, India
-            </p>
+            <div className="mt-4 space-y-3 text-sm text-gray-200">
+              <a
+                href="mailto:support@shopease.com"
+                className="flex items-center gap-3 transition-colors hover:text-white"
+              >
+                <Mail size={16} className="text-pink" />
+                support@shopease.com
+              </a>
+              <p className="flex items-center gap-3">
+                <Phone size={16} className="text-pink" />
+                +91 98xxx xxx10
+              </p>
+              <p className="flex items-center gap-3 text-gray-400">
+                <MapPin size={16} className="text-pink" />
+                Delhi, India
+              </p>
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="border-t border-gray-200 py-4 text-center text-xs text-gray-500">
-        © {new Date().getFullYear()} ShopEase. All rights reserved.
+      <div className="border-t border-white/10">
+        <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-5 text-xs text-gray-500 sm:flex-row sm:items-center sm:justify-between">
+          <span>© {new Date().getFullYear()} ShopEase. All rights reserved.</span>
+          <span>Made for the things you love.</span>
+        </div>
       </div>
     </footer>
   )
