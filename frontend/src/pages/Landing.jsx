@@ -7,7 +7,7 @@ export default function Landing() {
     <div className="pb-4">
       <section className="relative overflow-hidden bg-[#fdfaf5]">
         <div className="mx-auto grid m  ax-w-7xl items-center gap-10 px-4 py-14 sm:py-20 lg:grid-cols-2 lg:gap-8">
-          <div className="relative z-10">
+          <div className="mx-auto relative z-10">
             <p className="text-sm font-bold uppercase tracking-[0.2em] text-brand">
               Welcome to ShopEase
             </p>
