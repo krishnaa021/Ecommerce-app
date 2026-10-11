@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, Navigate, useLocation } from 'react-router-dom'
 import Input from '../components/common/Input'
+import GoogleSignInButton from '../components/auth/GoogleSignInButton'
 import { useAuth } from '../context/AuthContext'
 import getErrorMessage from '../utils/getErrorMessage'
 
@@ -13,7 +14,6 @@ export default function Login() {
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
 
-  // Already logged in (or just logged in): go to where the user was headed
   if (user) return <Navigate to={from} replace />
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value })
@@ -75,6 +75,8 @@ export default function Login() {
             {submitting ? 'Logging in...' : 'Login'}
           </button>
         </form>
+
+        <GoogleSignInButton text="signin_with" />
 
         <p className="mt-6 text-center text-sm text-gray-600">
           New here?{' '}

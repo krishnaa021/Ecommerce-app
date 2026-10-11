@@ -14,7 +14,10 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     const url = error.config?.url ?? ''
-    const isAuthForm = url.includes('/auth/login') || url.includes('/auth/register')
+    const isAuthForm =
+      url.includes('/auth/login') ||
+      url.includes('/auth/register') ||
+      url.includes('/auth/google')
 
     if (error.response?.status === 401 && !isAuthForm && localStorage.getItem('token')) {
       localStorage.removeItem('token')

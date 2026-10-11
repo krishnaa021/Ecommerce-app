@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, Navigate, useLocation } from 'react-router-dom'
 import Input from '../components/common/Input'
+import GoogleSignInButton from '../components/auth/GoogleSignInButton'
 import { useAuth } from '../context/AuthContext'
 import getErrorMessage from '../utils/getErrorMessage'
 
@@ -84,6 +85,8 @@ export default function Register() {
             {submitting ? 'Creating account...' : 'Create account'}
           </button>
         </form>
+
+        <GoogleSignInButton text="signup_with" />
 
         <p className="mt-6 text-center text-sm text-gray-600">
           Already have an account?{' '}

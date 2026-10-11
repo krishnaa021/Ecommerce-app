@@ -1,14 +1,12 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { getCurrentUser, loginUser, registerUser } from '../api/authApi'
+import { getCurrentUser, googleLoginUser, loginUser, registerUser } from '../api/authApi'
 
 const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
-  // If a token is stored, stay in "loading" until /auth/me confirms it
   const [loading, setLoading] = useState(() => Boolean(localStorage.getItem('token')))
 
-  // Restore the session on page load
   useEffect(() => {
     if (!localStorage.getItem('token')) return
     let ignore = false
@@ -18,7 +16,6 @@ export function AuthProvider({ children }) {
         if (!ignore) setUser(u)
       })
       .catch(() => {
-        // A 401 is already handled by the axios interceptor (token removed)
       })
       .finally(() => {
         if (!ignore) setLoading(false)
@@ -29,7 +26,6 @@ export function AuthProvider({ children }) {
     }
   }, [])
 
-  // The axios interceptor fires this when a token expires
   useEffect(() => {
     const handleLogout = () => setUser(null)
     window.addEventListener('auth:logout', handleLogout)
@@ -52,20 +48,32 @@ export function AuthProvider({ children }) {
     [saveSession]
   )
 
+  const googleLogin = useCallback(
+    async (idToken) => saveSession(await googleLoginUser(idToken)),
+    [saveSession]
+  )
+
   const logout = useCallback(() => {
     localStorage.removeItem('token')
     setUser(null)
   }, [])
 
   const value = useMemo(
-    () => ({ user, loading, isAdmin: user?.role === 'admin', login, register, logout }),
-    [user, loading, login, register, logout]
+    () => ({
+      user,
+      loading,
+      isAdmin: user?.role === 'admin',
+      login,
+      register,
+      googleLogin,
+      logout,
+    }),
+    [user, loading, login, register, googleLogin, logout]
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
 export function useAuth() {
   const ctx = useContext(AuthContext)
   if (!ctx) throw new Error('useAuth must be used inside <AuthProvider>')
